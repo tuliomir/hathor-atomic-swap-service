@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
+import create from '@functions/create';
 
 const serverlessConfiguration: AWS = {
   service: 'hathor-atomic-swap-service',
@@ -19,7 +20,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { hello, create },
   package: { individually: true },
   custom: {
     esbuild: {
