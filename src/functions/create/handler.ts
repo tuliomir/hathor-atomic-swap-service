@@ -4,19 +4,24 @@ import { middyfy } from '@libs/lambda';
 
 import { ICreateProposalRequest } from '@models/create';
 import createProposalSchema from './schema';
+import { createProposalOnDb } from "@functions/create/service";
+import { getDbConnection } from "@libs/db";
+
+
+const mySql = getDbConnection();
 
 const create: ValidatedEventAPIGatewayProxyEvent<typeof createProposalSchema> = async (event) => {
-  const {
-    partialTx,
-    authPassword,
-  } = event.body as ICreateProposalRequest;
+    const {
+        partialTx,
+        authPassword,
+    } = event.body as ICreateProposalRequest;
 
-  console.log(`Received pass: ${authPassword}, tx: ${partialTx}`);
+    const { proposalId } = await createProposalOnDb(mySql,{partialTx, authPassword});
 
-  return formatJSONResponse({
-    message: `Password: ${authPassword}, tx length: ${partialTx.length}`,
-    event,
-  });
+    return formatJSONResponse({
+        success: true,
+        id: proposalId,
+    });
 };
 
 export const main = middyfy(create);
