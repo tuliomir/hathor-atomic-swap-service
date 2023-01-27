@@ -5,6 +5,9 @@ const config: Config = {
   moduleNameMapper: {
     '^@src/(.*)$': '<rootDir>/src/$1',
     '^@tests/(.*)$': '<rootDir>/tests/$1',
+    '^@functions/(.*)$': '<rootDir>/src/functions/$1',
+    '^@libs/(.*)$': '<rootDir>/src/libs/$1',
+    '^@models/(.*)$': '<rootDir>/src/models/$1',
   },
   setupFiles: ['./tests/jestSetup.ts'],
   setupFilesAfterEnv: ['./tests/setupFrameworks.ts'],
