@@ -26,7 +26,7 @@ const globalErrorHandler = () : MiddlewareObj => {
       const errorObj = request.error as LambdaError;
       const errorBody = {
         code: errorObj.code || ApiError.UNKNOWN_ERROR,
-        message: errorObj.message || errorObj.code || 'Unknown error',
+        errorMessage: errorObj.message || errorObj.code || 'Unknown error',
         stack: errorObj.stack, // TODO: Remove this from production, only on dev
       };
       return {

@@ -14,6 +14,16 @@ describe('create a proposal', () => {
     })
 
     it('should reject for missing mandatory parameters', async () => {
-        expect(true).toBe(true);
+        await expect({
+            url: 'http://localhost:3001/dev/',
+            method: 'POST',
+            data: { } /* optional body parameters */,
+            headers: { Authorization: 'Bearer token_value' } /* optional headers */,
+        }).toReturnResponse(expect.objectContaining({
+            data: expect.objectContaining({
+                errorMessage: "Request body validation failed: requires property \"partialTx\", requires property \"authPassword\"",
+            }),
+            statusCode: 400,
+        }));
     })
 })
