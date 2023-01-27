@@ -1,3 +1,4 @@
+require('dotenv').config();
 import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
@@ -34,7 +35,7 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     'serverless-offline': {
-      httpPort: 3001,
+      httpPort: process.env.HTTP_PORT || 3001,
     },
   },
 };

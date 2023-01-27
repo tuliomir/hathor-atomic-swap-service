@@ -1,5 +1,4 @@
 import serverlessMysql, {ServerlessMysql} from 'serverless-mysql';
-require('dotenv').config();
 
 // @ts-ignore
 /**
