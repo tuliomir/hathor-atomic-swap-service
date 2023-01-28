@@ -18,10 +18,10 @@ const config: Config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/tests/utils.ts'],
   coverageThreshold: {
     global: {
-      branches: 88,
-      functions: 91,
-      lines: 93,
-      statements: 93,
+      branches: 95,
+      functions: 95,
+      lines: 95,
+      statements: 95,
     },
   },
   transformIgnorePatterns: ["/node_modules/(?!filter-obj)"],

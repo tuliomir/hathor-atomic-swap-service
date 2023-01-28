@@ -1,6 +1,6 @@
 import serverlessMysql, {ServerlessMysql} from 'serverless-mysql';
+import config from '../config'
 
-// @ts-ignore
 /**
  * Get a database connection.
  *
@@ -9,21 +9,7 @@ import serverlessMysql, {ServerlessMysql} from 'serverless-mysql';
 export const getDbConnection = (): ServerlessMysql => (
     serverlessMysql({
         library: require('mysql2'),
-        config: {
-            host: '127.0.0.1',
-            database: process.env.DB_NAME,
-            user: process.env.DB_USERNAME,
-            port: 3306,
-            password: process.env.DB_PASSWORD,
-        },
-        // TODO: Get this information from the dotEnv before trying production data
-        // config: {
-        //     host: process.env.DB_ENDPOINT,
-        //     database: process.env.DB_NAME,
-        //     user: process.env.DB_USER,
-        //     port: parseInt(process.env.DB_PORT, 10),
-        //     password: process.env.DB_PASS,
-        // },
+        config: config[process.env.ENV],
     })
 );
 
