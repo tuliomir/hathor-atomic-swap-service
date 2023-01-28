@@ -5,20 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export enum ApiError {
-  INVALID_PASSWORD = 'invalid-password',
-  UNKNOWN_ERROR = 'unknown-error',
-}
+/**
+ * Enum-like list of possible API Errors
+ */
+export type ApiError =
+  'INVALID_PASSWORD' |
+  'UNKNOWN_ERROR'
 
 export const STATUS_CODE_TABLE = {
-  [ApiError.INVALID_PASSWORD]: 400,
-  [ApiError.UNKNOWN_ERROR]: 500,
-};
+  INVALID_PASSWORD: 400,
+  UNKNOWN_ERROR: 500,
+} as const;
 
 export class LambdaError extends Error {
   code: string;
 
-  constructor(message, code: ApiError = ApiError.UNKNOWN_ERROR) {
+  constructor(message, code: ApiError = 'UNKNOWN_ERROR') {
     super(message);
     this.code = code;
   }
