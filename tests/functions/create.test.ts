@@ -56,6 +56,28 @@ describe('create a proposal', () => {
             }));
     })
 
+    it('should treat the response for a badly formatted code error', async () => {
+        const event = generateApiEvent();
+        const context = generateHandlerContext();
+
+        event['body'].authPassword = 'abc';
+
+        // Mock
+        dbMethodSpy.mockImplementationOnce(() => {
+            throw 'Badly formatted failure';
+        })
+
+        // The type checker does not recognize the event type correctly
+        // @ts-ignore
+        const response = await create(event, context)
+        expect(response.statusCode).toStrictEqual(500);
+        expect(JSON.parse(response.body))
+            .toStrictEqual(expect.objectContaining({
+                code: 'unknown-error',
+                errorMessage: 'Untreated error: Badly formatted failure',
+            }));
+    })
+
     it('should return the uuid of the created proposal', async () => {
         const event = generateApiEvent();
         const context = generateHandlerContext();

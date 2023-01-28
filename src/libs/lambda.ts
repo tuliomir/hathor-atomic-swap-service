@@ -23,10 +23,14 @@ const globalErrorHandler = () : MiddlewareObj => {
     },
     onError: async (request) => {
       await closeDbConnection(request.event['mySql']);
-      const errorObj = request.error as LambdaError;
+      let errorObj = request.error as LambdaError;
+      if (!errorObj || !errorObj.message) {
+        errorObj = new LambdaError(`Untreated error: ${errorObj}`);
+      }
+
       const errorBody = {
         code: errorObj.code || ApiError.UNKNOWN_ERROR,
-        errorMessage: errorObj.message || errorObj.code || 'Unknown error',
+        errorMessage: errorObj.message,
         stack: errorObj.stack, // TODO: Remove this from production, only on dev
       };
       return {
