@@ -29,7 +29,7 @@ describe('create a proposal', () => {
         expect(response.statusCode).toStrictEqual(400);
         expect(JSON.parse(response.body))
             .toStrictEqual(expect.objectContaining({
-                code: 'invalid-password',
+                code: 'INVALID_PASSWORD',
                 errorMessage: "Invalid password",
             }));
     })
@@ -51,7 +51,7 @@ describe('create a proposal', () => {
         expect(response.statusCode).toStrictEqual(500);
         expect(JSON.parse(response.body))
             .toStrictEqual(expect.objectContaining({
-                code: 'unknown-error',
+                code: 'UNKNOWN_ERROR',
                 errorMessage: 'Random failure',
             }));
     })
@@ -73,7 +73,7 @@ describe('create a proposal', () => {
         expect(response.statusCode).toStrictEqual(500);
         expect(JSON.parse(response.body))
             .toStrictEqual(expect.objectContaining({
-                code: 'unknown-error',
+                code: 'UNKNOWN_ERROR',
                 errorMessage: 'Untreated error: Badly formatted failure',
             }));
     })
@@ -88,7 +88,6 @@ describe('create a proposal', () => {
         // The type checker does not recognize the event type correctly
         // @ts-ignore
         const response = await create(event, context)
-        expect(response.statusCode).toStrictEqual(200);
         let body = JSON.parse(response.body);
 
         expect(body)
@@ -97,5 +96,6 @@ describe('create a proposal', () => {
                 id: expect.any(String),
             }));
         expect(body.id).toHaveLength(36);
+        expect(response.statusCode).toStrictEqual(200);
     })
 })
