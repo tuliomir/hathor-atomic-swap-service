@@ -45,7 +45,7 @@ const globalErrorHandler = () : MiddlewareObj => ({
       errorBody.stack = errorObj.stack;
     }
     return {
-      statusCode: STATUS_CODE_TABLE[errorBody.code] || 500,
+      statusCode: STATUS_CODE_TABLE[errorBody.code],
       body: JSON.stringify(errorBody),
     };
   },

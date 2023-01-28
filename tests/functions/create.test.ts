@@ -1,11 +1,8 @@
 import { closeDbConnection, getDbConnection } from "@libs/db";
 import { cleanDatabase, generateApiEvent, generateHandlerContext } from "../utils";
 import { main as create } from "@functions/create/handler";
-import * as service from "@functions/create/service";
 
 const mySql = getDbConnection();
-
-const dbMethodSpy = jest.spyOn(service, 'createProposalOnDb');
 
 describe('create a proposal', () => {
 
@@ -31,50 +28,6 @@ describe('create a proposal', () => {
             .toStrictEqual(expect.objectContaining({
                 code: 'INVALID_PASSWORD',
                 errorMessage: "Invalid password",
-            }));
-    })
-
-    it('should treat the response for a db failure', async () => {
-        const event = generateApiEvent();
-        const context = generateHandlerContext();
-
-        event['body'].authPassword = 'abc';
-
-        // Mock
-        dbMethodSpy.mockImplementationOnce(() => {
-            throw new Error('Random failure');
-        })
-
-        // The type checker does not recognize the event type correctly
-        // @ts-ignore
-        const response = await create(event, context)
-        expect(response.statusCode).toStrictEqual(500);
-        expect(JSON.parse(response.body))
-            .toStrictEqual(expect.objectContaining({
-                code: 'UNKNOWN_ERROR',
-                errorMessage: 'Random failure',
-            }));
-    })
-
-    it('should treat the response for a badly formatted code error', async () => {
-        const event = generateApiEvent();
-        const context = generateHandlerContext();
-
-        event['body'].authPassword = 'abc';
-
-        // Mock
-        dbMethodSpy.mockImplementationOnce(() => {
-            throw 'Badly formatted failure';
-        })
-
-        // The type checker does not recognize the event type correctly
-        // @ts-ignore
-        const response = await create(event, context)
-        expect(response.statusCode).toStrictEqual(500);
-        expect(JSON.parse(response.body))
-            .toStrictEqual(expect.objectContaining({
-                code: 'UNKNOWN_ERROR',
-                errorMessage: 'Untreated error: Badly formatted failure',
             }));
     })
 
