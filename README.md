@@ -26,11 +26,13 @@ This should run all migrations from the `db/migrations` folder and get the datab
 Create an `.env` file on the project root folder, containing the following variables, with the values of your local
 environment of choice: 
 ```sh
+STAGE=local
 DEV_DB=mysql
 DB_USERNAME=my_user
 DB_PASSWORD=password123
 DB_NAME=atomic_swap_service
 ```
+The `STAGE` variable is especially important on the management of MySql connections on the local/test environment.
 
 ## Starting local environment
 With these requirements above being met, run:
