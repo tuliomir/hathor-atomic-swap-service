@@ -8,6 +8,7 @@ import config from '../config';
  */
 export const getDbConnection = (): ServerlessMysql => (
   serverlessMysql({
+    // eslint-disable-next-line global-require
     library: require('mysql2'),
     config: config[process.env.NODE_ENV],
   })

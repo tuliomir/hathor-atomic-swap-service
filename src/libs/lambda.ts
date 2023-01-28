@@ -2,37 +2,56 @@ import middy, { MiddlewareObj } from '@middy/core';
 import middyJsonBodyParser from '@middy/http-json-body-parser';
 import { closeDbConnection, getDbConnection } from '@libs/db';
 import { ApiError, LambdaError, STATUS_CODE_TABLE } from '@libs/errors';
+import { ServerlessMysql } from 'serverless-mysql';
 
 const mySql = getDbConnection();
 
-export const middyfy = (handler) => middy(handler)
-  .use(middyJsonBodyParser())
-  .use(globalErrorHandler());
+interface swapRequest extends middy.Request {
+  event: {
+    /**
+     * A connection managed by the global error handler middleware
+     */
+    mySql?: ServerlessMysql,
+    [key: string]: any,
+  }
+  error: LambdaError | Error,
+}
 
 const globalErrorHandler = () : MiddlewareObj => ({
   // Adds the MySQL connection to the handler context
-  before: async (request) => {
+  before: async (request: swapRequest) => {
     request.event.mySql = await mySql;
   },
   // Closes the connection of the handler context
-  after: async (request) => {
+  after: async (request: swapRequest) => {
     await closeDbConnection(request.event.mySql);
   },
-  onError: async (request) => {
+  onError: async (request: swapRequest) => {
     await closeDbConnection(request.event.mySql);
-    let errorObj = request.error as LambdaError;
+    let errorObj = request.error;
     if (!errorObj || !errorObj.message) {
       errorObj = new LambdaError(`Untreated error: ${errorObj}`);
     }
 
     const errorBody = {
-      code: errorObj.code || ApiError.UNKNOWN_ERROR,
+      code: ApiError.UNKNOWN_ERROR,
       errorMessage: errorObj.message,
-      stack: errorObj.stack, // TODO: Remove this from production, only on dev
+      stack: undefined,
     };
+    if (errorObj instanceof LambdaError) {
+      // @ts-ignore FIXME
+      errorBody.code = errorObj.code;
+    }
+    if (process.env.STAGE === 'local') {
+      errorBody.stack = errorObj.stack;
+    }
     return {
-      statusCode: STATUS_CODE_TABLE[errorObj.code] || 500,
+      statusCode: STATUS_CODE_TABLE[errorBody.code] || 500,
       body: JSON.stringify(errorBody),
     };
   },
 });
+
+export const middyfy = (handler) => middy(handler)
+  .use(middyJsonBodyParser())
+  .use(globalErrorHandler());

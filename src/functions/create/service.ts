@@ -1,7 +1,7 @@
 import { ServerlessMysql } from 'serverless-mysql';
 import { v4 } from 'uuid';
 
-interface CreateProposalDbInputs {
+export interface CreateProposalDbInputs {
     authPassword: string;
     partialTx: string;
     expiresAt?: Date;

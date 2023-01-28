@@ -31,4 +31,4 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof createProposalSchema> = 
   });
 };
 
-export const main = middyfy(create);
+export default middyfy(create);
