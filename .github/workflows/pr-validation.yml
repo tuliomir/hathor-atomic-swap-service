@@ -59,9 +59,9 @@ jobs:
           NODE_ENV: test
           DB_ENDPOINT: 127.0.0.1
           DB_PORT: 3306
-          DB_NAME: wallet_service_ci
-          DB_USER: wallet_service_user
-          DB_PASS: password
+          CI_DB_NAME: wallet_service_ci
+          CI_DB_USERNAME: wallet_service_user
+          CI_DB_PASSWORD: password
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
