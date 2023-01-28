@@ -9,7 +9,7 @@ import config from '../config'
 export const getDbConnection = (): ServerlessMysql => (
     serverlessMysql({
         library: require('mysql2'),
-        config: config[process.env.ENV],
+        config: config[process.env.NODE_ENV],
     })
 );
 
