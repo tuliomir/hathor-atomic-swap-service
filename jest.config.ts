@@ -14,6 +14,7 @@ const config: Config = {
   testPathIgnorePatterns: [
     '<rootDir>/dist/',
   ],
+  collectCoverage: true,
   coveragePathIgnorePatterns: ['/node_modules/', '/tests/utils.ts'],
   coverageThreshold: {
     global: {
